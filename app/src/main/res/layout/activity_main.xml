@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgcolor"
+    tools:context=".MainActivity"
+    android:gravity="center">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="3pt">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:background="@color/buttonColor"
+            android:onClick="buttonClick"
+            android:textColor="@color/black"
+            app:backgroundTintMode="add" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:textColor="@color/black"
+            android:background="@color/buttonColor"
+            android:onClick="buttonClick"
+            app:backgroundTintMode="add"/>
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:textColor="@color/black"
+            android:background="@color/buttonColor"
+            android:onClick="buttonClick"
+            app:backgroundTintMode="add"/>
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="3pt">
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:background="@color/buttonColor"
+            android:textColor="@color/black"
+            android:onClick="buttonClick"
+            app:backgroundTintMode="add" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:text=""
+            android:textColor="@color/black"
+            android:onClick="buttonClick"
+            android:background="@color/buttonColor"
+            app:backgroundTintMode="add"/>
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:onClick="buttonClick"
+            android:textColor="@color/black"
+            android:background="@color/buttonColor"
+            app:backgroundTintMode="add"/>
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginTop="3pt">
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:background="@color/buttonColor"
+            android:textColor="@color/black"
+            android:onClick="buttonClick"
+            app:backgroundTintMode="add" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:textColor="@color/black"
+            android:background="@color/buttonColor"
+            android:onClick="buttonClick"
+            app:backgroundTintMode="add"/>
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_width="40pt"
+            android:layout_height="40pt"
+            android:layout_marginStart="4pt"
+            android:layout_marginLeft="4pt"
+            android:background="@color/buttonColor"
+            android:onClick="buttonClick"
+            android:textColor="@color/black"
+            app:backgroundTintMode="add" />
+
+
+    </TableRow>
+
+
+</TableLayout>
