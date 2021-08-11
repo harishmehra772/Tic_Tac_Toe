@@ -5,14 +5,25 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import com.google.firebase.analytics.FirebaseAnalytics
 import android.widget.Toast
+import android.os.Handler
+import android.os.Looper
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var analytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        analytics=Firebase.analytics
     }
+
+    var player1count=0
+    var player2count=0
 
     fun buttonClick(view: View) {
         val buttonSelected: Button = view as Button
@@ -114,16 +125,53 @@ class MainActivity : AppCompatActivity() {
         if(player2.contains(1)&&player2.contains(5)&&player2.contains(9))
             winner=2
         //diag2
-        if(player2.contains(3)&&player1.contains(5)&&player2.contains(7))
+        if(player2.contains(3)&&player2.contains(5)&&player2.contains(7))
             winner=2
 
         if(winner==1)
         {
+
            Toast.makeText(this,"Player 1 wins !",Toast.LENGTH_LONG).show()
+            player1count++
+
+            restartGame()
         }
         else if(winner==2)
             {
+                
                 Toast.makeText(this,"Player 2 wins !",Toast.LENGTH_LONG).show()
+                player2count++
+
+                restartGame()
             }
+    }
+
+    fun restartGame()
+    {
+        activePlayer=1
+        player1.clear()
+        player2.clear()
+        var cellId=0
+        for(cellId in 1..9)
+        {
+            var buttonSelected:Button?
+            buttonSelected = when(cellId){
+                1-> findViewById(R.id.button1)
+                2-> findViewById(R.id.button2)
+                3-> findViewById(R.id.button3)
+                4-> findViewById(R.id.button4)
+                5-> findViewById(R.id.button5)
+                6-> findViewById(R.id.button6)
+                7-> findViewById(R.id.button7)
+                8-> findViewById(R.id.button8)
+                9-> findViewById(R.id.button9)
+                else
+                ->{findViewById(R.id.button1)}
+            }
+            buttonSelected!!.text=""
+            buttonSelected!!.isEnabled=true
+            buttonSelected!!.setBackgroundResource(R.color.buttonColor)
+        }
+        Toast.makeText(this,"Player 1:${player1count} Player 2:${player2count}",Toast.LENGTH_SHORT).show()
     }
 }
