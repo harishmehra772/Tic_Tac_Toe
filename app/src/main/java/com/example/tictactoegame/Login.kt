@@ -10,11 +10,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.*
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class Login : AppCompatActivity() {
 
     private  var mAuth:FirebaseAuth?=null
+
+    private var database= FirebaseDatabase.getInstance()
+    private var myRef=database.reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -36,6 +42,10 @@ class Login : AppCompatActivity() {
                {
                    Toast.makeText(applicationContext,"Successful Login",Toast.LENGTH_LONG)
                        .show()
+                   var currentUser=mAuth!!.currentUser
+                 if(currentUser!=null)
+                   myRef.child("Users").child(splitString(currentUser.email.toString())).child("Request").setValue(currentUser.uid)
+
                    loadMain()
                }
                else{
@@ -53,18 +63,25 @@ class Login : AppCompatActivity() {
 
     fun loadMain()
     {
+
         var currentUser=mAuth!!.currentUser
         if(currentUser!=null) {
+            //save database
+           // myRef.child("Users").child(splitString(currentUser.email.toString())).setValue(currentUser.uid)
+
+
             var intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("email", currentUser.email)
-            intent.putExtra("uid", currentUser.uid)
+            intent.putExtra("email", currentUser!!.email)
+            intent.putExtra("uid", currentUser!!.uid)
             startActivity(intent)
         }
+    }
 
-
+    fun splitString(str:String):String{
+        var split=str.split("@")
+        return split[0]
     }
 }
-
 
 
 
