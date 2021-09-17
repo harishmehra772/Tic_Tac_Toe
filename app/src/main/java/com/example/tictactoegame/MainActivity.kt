@@ -9,17 +9,30 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import android.widget.Toast
 import android.os.Handler
 import android.os.Looper
+import android.widget.EditText
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
+
+    private var database= FirebaseDatabase.getInstance()
+    private var myRef=database.reference
+
+    var myEmail:String?=null
 
     private lateinit var analytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         analytics=Firebase.analytics
+        var b: Bundle = intent.extras!!
+        myEmail=b.getString("email")
+        incomigCall()
     }
 
     var player1count=0
@@ -42,7 +55,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        playGame(cellId,buttonSelected)
+        myRef.child("PlayerOnline").child(sessionId!!).child(cellId.toString()).setValue(myEmail)
+
     }
 
     var activePlayer=1
@@ -173,5 +187,131 @@ class MainActivity : AppCompatActivity() {
             buttonSelected!!.setBackgroundResource(R.color.buttonColor)
         }
         Toast.makeText(this,"Player 1:${player1count} Player 2:${player2count}",Toast.LENGTH_SHORT).show()
+    }
+
+    fun AutoPlay(cellId:Int){
+
+
+
+        var buttonSelected:Button?
+        buttonSelected = when(cellId){
+            1-> findViewById(R.id.button1)
+            2-> findViewById(R.id.button2)
+            3-> findViewById(R.id.button3)
+            4-> findViewById(R.id.button4)
+            5-> findViewById(R.id.button5)
+            6-> findViewById(R.id.button6)
+            7-> findViewById(R.id.button7)
+            8-> findViewById(R.id.button8)
+            9-> findViewById(R.id.button9)
+            else
+            ->{findViewById(R.id.button1)}
+        }
+
+        playGame(cellId,buttonSelected)
+
+    }
+
+
+    fun buReqEvent(view: View) {
+        val editText:EditText=findViewById(R.id.etEmail)
+        var userEmail=editText.text.toString()
+        myRef.child("Users").child(splitString(userEmail)).child("Request").push().setValue(myEmail)
+        playerOnline(splitString(myEmail!!)+splitString(userEmail))
+        playerSymbol="X"
+    }
+
+    fun buAcceptEvent(view: View){
+        val editText:EditText=findViewById(R.id.etEmail)
+        var userEmail=editText.text.toString()
+        myRef.child("Users").child(splitString(userEmail)).child("Request").push().setValue(myEmail)
+
+        playerOnline(splitString(userEmail)+splitString( myEmail!!))
+        playerSymbol="O"
+    }
+
+    var sessionId:String?=null
+    var playerSymbol:String?=null
+    fun playerOnline(sessionId:String){
+        this.sessionId=sessionId
+
+        myRef.removeValue()
+
+        myRef.child("PlayerOnline").child(sessionId!!).
+        addValueEventListener(object :ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
+                    player1.clear()
+                    player2.clear()
+                    val td=snapshot!!.value as HashMap<String,Any>
+                    if(td!=null)
+                    {
+                        var value:String
+                        for(key in td.keys)
+                        {
+                            value=td[key] as String
+
+                            if(value!=myEmail)
+                            {
+                                activePlayer=if(playerSymbol=="X") 1 else 2
+                            }
+                            else
+                            {
+                                activePlayer=if(playerSymbol=="X") 2 else 1
+                            }
+                            AutoPlay(key.toInt())
+                        }
+                    }
+                }catch (ex:Exception){}
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+
+    }
+
+    var number=0
+
+    fun incomigCall(){
+        myRef.child("Users").child(splitString(myEmail!!)).child("Request").
+        addValueEventListener(object :ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+             try {
+                 val td=snapshot!!.value as HashMap<String,Any>
+                 if(td!=null)
+                 {
+                     var value:String
+                     for(key in td.keys)
+                     {
+                         value=td[key] as String
+                         val editText:EditText=findViewById(R.id.etEmail)
+                         var userEmail=editText.text.toString()
+                         editText.setText(value)
+
+                         val notifyMe=Notifications()
+                         notifyMe.notify(applicationContext,value+" wants to play tic tac toe ",number)
+                         number++
+                         myRef.child("Users").child(splitString(myEmail!!)).child("Request").setValue(true)
+
+                         break
+                     }
+                 }
+             }catch (ex:Exception){}
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    fun splitString(str:String):String{
+        var split=str.split("@")
+        return split[0]
     }
 }
